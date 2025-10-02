@@ -1,0 +1,338 @@
+{
+  "personal": {
+    "name": "Emmanuel Awotwe",
+    "title": "AI/RAG Developer & Data Analyst (Graduate)",
+    "location": "Australia",
+    "summary": "Graduate data analyst who shipped a production-quality RAG assistant in 4 weeks and improved finance/advisory delivery with measurable outcomes. Combines finance analytics with applied AI, delivering automated solutions that save significant operational time.",
+    "elevator_pitch": "I combine finance analytics and applied AI. In four weeks I built a grounded Food RAG MVP, migrated it to a cloud stack with an Admin Dashboard, and delivered ~1,200 hours/year in saved effort. Earlier, I supported month-end reporting at Newmont with ≥95% on-time delivery and a 20% improvement in vendor compensation turnaround; and at De Rigglets I reduced advisory turnaround ~20% with ≥85% first-pass acceptance.",
+    "contact": {
+      "email": "emmanuelawotwe017@gmail.com",
+      "phone": "+61 411 264 498",
+      "linkedin": "www.linkedin.com/in/emmanuel-awotwe-0b6671227/",
+      "github": "https://github.com/KAwotwe",
+      "portfolio": ""
+    }
+  },
+
+  "salary_location": {
+    "current_salary_range": "N/A (Graduate/entry-level transition)",
+    "salary_expectations": "$80,000 - $100,000 AUD per year",
+    "location_preferences": ["Australia", "Remote", "Hybrid"],
+    "relocation_willing": true,
+    "remote_experience": "Experience with remote collaboration and delivery",
+    "travel_availability": "Available for travel as needed",
+    "work_authorization": "Currently on student visa, applying for working visa after Masters completion in November 2025"
+  },
+
+  "projects_star_format": [
+    {
+      "project_name": "Food RAG Application (Production-Ready)",
+      "situation": "Manual content lookup and fragmented knowledge slowed support and decision-making for a food-focused program.",
+      "task": "Design and ship a grounded RAG system with admin surface and reliable retrieval.",
+      "action": "Prototyped UI (V0), wrote user stories in ClickUp, built embeddings with Ollama, configured Upstash Vector, integrated Groq API, and deployed to Vercel; implemented admin/dashboard guardrails.",
+      "result": "Automated information lookup saving ~1,200 hrs/year; stable production deployment with clear handover.",
+      "technologies": ["Python", "Ollama (embeddings)", "Upstash Vector", "Groq API", "Vercel", "V0.dev"],
+      "team_size": "Cross-functional coordination (devs + analysts)",
+      "duration": "≈4 weeks",
+      "budget_managed": "N/A",
+      "links": {
+        "github": "https://github.com/KAwotwe/food-search-app",
+        "live_demo": "https://v0-rag-with-groq.vercel.app/"
+      }
+    },
+    {
+      "project_name": "Australian International Trade Analytics (1988–2024) — Tableau",
+      "situation": "Stakeholders needed clear visibility into long-run export/import dynamics and category/subcategory drivers.",
+      "task": "Build executive-ready dashboards and a storyboard highlighting key trends and recommendations.",
+      "action": "Modeled 9 main categories and key subcategories, created Raw/Analytical/Statistical views, and a 5-point storyboard; deep-dived on 28. Metalliferous ores & metal scrap.",
+      "result": "Surfaced that Metalliferous ores peaked ≈$185.26B (2021), ~95% of ‘Crude Materials’ and ~31% of national exports in 2021; provided 2025–2029 recommendations (value-add processing, partner diversification, infra/logistics).",
+      "technologies": ["Tableau", "Excel/CSV"],
+      "team_size": "Individual",
+      "duration": "Semester project",
+      "budget_managed": "N/A",
+      "kpis": {
+        "peak_export_billion": 185.26,
+        "export_share_within_category_pct_peak": 95.0,
+        "national_export_contribution_pct_2021": 31.0
+      },
+      "artifacts": ["Analysis of Australian International Trade.pdf", "Analysis of Australian International Trade.twb"]
+    },
+    {
+      "project_name": "Australian Open Finals — Visual Analytics (1900s–2024)",
+      "situation": "Fans and analysts wanted interpretable visuals on who wins, when, and how dominance evolves over time.",
+      "task": "Design Tableau visuals to explain win ratios, early-set dominance, and national representation.",
+      "action": "Built parallel coordinates, geo/treemap, scatter panels, and ‘Top Players 5+’ comparisons.",
+      "result": "Showed early-set dominance; men’s competitiveness rising; historical title leaders: Australia (94), USA (44); conversion: Djokovic 10/10, Court 10/11.",
+      "technologies": ["Tableau"],
+      "team_size": "Individual",
+      "duration": "Semester project",
+      "budget_managed": "N/A",
+      "artifacts": ["Australian Open Visual Analysis.pdf", "Australian Open Visual Analysis.twb"]
+    },
+    {
+      "project_name": "Deep Credit Risk (PD) Modelling with Scenario Context",
+      "situation": "Institution required PD modelling with robust drivers and regulatory awareness.",
+      "task": "Compare models, quantify improvements, and frame climate/ethical constraints.",
+      "action": "Used Statsmodels/Logit on FICO_orig_time, LTV_orig_time, growth; discussed GDPR/explainability (SHAP concepts) and NGFS-like scenario extensions.",
+      "result": "Improved pseudo-R² to ~0.02535 (from ~0.01627 baseline) with better log-likelihood; articulated compliance/evaluation plan.",
+      "technologies": ["Python", "statsmodels", "pandas", "Scenario analysis"],
+      "team_size": "2–3 (academic collaboration)",
+      "duration": "Semester project",
+      "budget_managed": "N/A"
+    },
+    {
+      "project_name": "Employee Performance Prediction (Conspan)",
+      "situation": "HR leaders sought drivers of performance and actionable improvements.",
+      "task": "Run EDA, build predictive models, and synthesize prescriptions.",
+      "action": "Built linear/tree regressors; analyzed rotation, training/tools, overtime; generated department insights.",
+      "result": "Identified factors positively/negatively associated with performance; supported targeted training and workload balance.",
+      "technologies": ["Python", "EDA", "Linear Regression", "Decision Trees"],
+      "team_size": "2–3 (academic collaboration)",
+      "duration": "Semester project",
+      "budget_managed": "N/A"
+    },
+    {
+      "project_name": "Church Database Management System (SQL/ERD)",
+      "situation": "Community organization needed reliable relational design and governance.",
+      "task": "Produce ERD, enforce integrity, and support analytic queries.",
+      "action": "Implemented PK/FK with cascades, CHECK constraints, and views; wrote natural/self-joins, group-by/having, and subqueries.",
+      "result": "Robust schema with auditable constraints and reusable views for ops/analytics.",
+      "technologies": ["PostgreSQL/SQL", "ERD/UML"],
+      "team_size": "Individual",
+      "duration": "Semester project",
+      "budget_managed": "N/A"
+    },
+    {
+      "project_name": "Tesla Stock Price Forecasting (LR vs LSTM)",
+      "situation": "Volatile time series required benchmarkable forecasting and error analysis.",
+      "task": "Compare interpretable baseline vs. deep model and discuss trade-offs.",
+      "action": "Engineered features, trained LR and LSTM, and evaluated with RMSE/MAE/MSE/R²; plotted residuals and loss curves.",
+      "result": "Clear interpretability–accuracy trade-offs; guidance on when to prefer LR vs LSTM under constraints.",
+      "technologies": ["Python", "Keras/TensorFlow (LSTM)", "Linear Regression"],
+      "team_size": "2–3 (academic collaboration)",
+      "duration": "Semester project",
+      "budget_managed": "N/A"
+    }
+  ],
+
+  "leadership_examples_star": [
+    {
+      "situation": "Multiple MSc team projects required direction, consistent quality, and deadlines.",
+      "task": "Coordinate planning, set standards, and ensure delivery.",
+      "action": "Defined templates, split work via ClickUp, ran reviews, and handled stakeholder comms.",
+      "result": "On-time submissions with improved first-pass quality; repeatable workflow for future teams."
+    },
+    {
+      "situation": "Production RAG launch needed smooth cross-functional execution.",
+      "task": "Bridge product/engineering and own delivery.",
+      "action": "Gathered requirements, synced CMS across UAT/Prod, unblocked developers, and owned QA/hand-off.",
+      "result": "Stable launch with measurable time-savings (~1,200 hrs/yr)."
+    }
+  ],
+
+  "experience": [
+    {
+      "company": "AUSBIZ Consulting",
+      "title": "Business & AI Data Analyst Intern",
+      "duration": "May 2025 – September 2025",
+      "company_context": "AI/ML consulting firm specializing in business analytics and industry projects",
+      "team_structure": "Cross-functional team including developers, technical staff, and analysts",
+      "achievements_star": [
+        {
+          "situation": "Industry project required a production-ready Food RAG and website problem analysis.",
+          "task": "Analyze, prototype, and ship a reliable system with clear admin surface.",
+          "action": "V0 prototyping, ClickUp user stories, Ollama embeddings, Upstash Vector, Groq API integration, Vercel deploy.",
+          "result": "Live system saving ~1,200 hours/year and improving content retrieval."
+        }
+      ],
+      "technical_skills_used": ["Python", "RAG", "Upstash Vector", "Groq API", "V0.dev", "Ollama", "ClickUp", "CMS"],
+      "leadership_examples": ["Led end-to-end RAG solution delivery", "Coordinated with developers and technical staff"]
+    },
+    {
+      "company": "Newmont Ghana Gold Ltd (NGGL)",
+      "title": "Accountant",
+      "duration": "Nov 2021 – Mar 2023",
+      "achievements_star": [
+        {
+          "situation": "Month-end close and community compensation processes required speed and accuracy.",
+          "task": "Improve reporting timeliness and vendor compensation workflow.",
+          "action": "SAP journals/reclasses/PRs, IsoMetrix cost reviews, cross-department coordination.",
+          "result": "≥95% on-time delivery; ~25% faster variance cycle; vendor compensation time improved ~20%."
+        }
+      ]
+    },
+    {
+      "company": "De Rigglets & Associates",
+      "title": "Senior Associate",
+      "duration": "Apr 2023 – Dec 2023",
+      "achievements_star": [
+        {
+          "situation": "Advisory work needed faster turnarounds and fewer reworks.",
+          "task": "Standardize processes and templates.",
+          "action": "Implemented checklists/templates; tightened client documentation loops.",
+          "result": "~20% faster turnaround; ≥85% first-pass acceptance; ≤48h to close doc gaps."
+        }
+      ]
+    }
+  ],
+
+  "skills": {
+    "technical": {
+      "programming_languages": [
+        { "language": "Python", "version": "3.x", "years": 2, "proficiency_1to5": 4 },
+        { "language": "SQL", "version": "ANSI/PostgreSQL", "years": 2, "proficiency_1to5": 4 },
+        { "language": "JavaScript", "version": "ES202x / Next.js 15", "years": 1, "proficiency_1to5": 3 }
+      ],
+      "databases": ["PostgreSQL", "Upstash Vector", "ChromaDB", "SAP (ERP data)"],
+      "cloud_platforms": ["Vercel", "Upstash", "Groq API", "V0.dev"],
+      "ai_ml": ["RAG systems", "Vector search", "LLM integration", "Embedding models (Ollama)", "Evaluation frameworks"],
+      "business_tools": ["Power BI", "Tableau", "MS Office", "SAS", "Tally", "ClickUp", "IsoMetrix"]
+    },
+    "soft_skills": [
+      "Communication",
+      "Leadership",
+      "Teamwork",
+      "Business Analysis",
+      "Data Management",
+      "Stakeholder Coordination",
+      "Process Standardization",
+      "Problem-solving",
+      "Client Communication",
+      "Project Leadership",
+      "Data Storytelling",
+      "Visual Analytics"
+    ],
+    "certifications": [
+      { "name": "ACCA Qualification Level 3", "status": "In Progress", "expected_completion": "Dec 2026", "expires": "N/A" },
+      { "name": "First Aid & CPR", "status": "Active", "expires": "to_add" },
+      { "name": "Driver's License", "status": "Active", "expires": "to_add" }
+    ],
+    "agile_scrum": {
+      "experience": "Backlog/tickets in ClickUp, iterative delivery, demos & handoffs",
+      "roles": ["Team member / project lead (academic)"],
+      "tools": ["ClickUp"]
+    },
+    "management_experience": {
+      "team_sizes_led": ["Academic teams (project lead)"],
+      "budget_responsibility": "N/A",
+      "hiring_experience": "N/A"
+    },
+    "cross_functional_collaboration": [
+      "Worked with developers, analysts, and content owners to launch Food RAG",
+      "Coordinated with Community Affairs at Newmont for compensation workflows"
+    ],
+    "mentoring_training": ["to_add"],
+    "open_source": [
+      { "repo": "food-search-app", "url": "https://github.com/KAwotwe/food-search-app" },
+      { "repo": "payload-website-starter", "url": "https://github.com/KAwotwe/payload-website-starter" }
+    ],
+    "writing_speaking": [],
+    "technical_writing": [],
+    "conference_speaking": []
+  },
+
+  "education": {
+    "degrees": [
+      {
+        "program": "MSc. Business Analytics (Extended)",
+        "institution": "University of Technology Sydney",
+        "timeline": "Feb 2024 – Dec 2025 (Expected)",
+        "projects_highlights": [
+          "Church Relational Database Project",
+          "Deep Credit Risk Prediction Modelling",
+          "Employee Performance Prediction Project",
+          "Tesla Stock Price Forecasting (LR vs LSTM)",
+          "Australian International Trade Tableau Analysis",
+          "Australian Open Finals Tableau Analysis"
+        ]
+      },
+      {
+        "program": "BSc. Administration (Accounting)",
+        "institution": "University of Ghana",
+        "timeline": "2017 – 2021",
+        "gpa": "3.5/4.0"
+      }
+    ],
+    "qualifications": ["ACCA Qualification Level 3 (In Progress – Expected Dec 2026)"]
+  },
+
+  "portfolio_evidence": {
+    "dashboards": [
+      {
+        "tool": "Tableau",
+        "title": "Australian International Trade (1988–2024) – Tableau",
+        "kpis": {
+          "peak_export_billion_28_metalliferous_ores": 185.26,
+          "share_of_crude_materials_peak_pct": 95.0,
+          "national_export_share_2021_pct": 31.0
+        },
+        "insights": [
+          "Metalliferous ores drives Crude Materials exports ~solely since 2010s; imports negligible",
+          "Post-2021 softening indicates exposure to global demand/prices; opportunity for domestic value-add"
+        ],
+        "artifacts": [
+          "Analysis of Australian International Trade.pdf",
+          "Analysis of Australian International Trade.twb"
+        ]
+      },
+      {
+        "tool": "Tableau",
+        "title": "Australian Open Finals (1900s–2024) – Tableau",
+        "kpis": {
+          "australia_titles": 94,
+          "usa_titles": 44,
+          "djokovic_finals_wins": "10/10",
+          "court_finals_wins": "10/11"
+        },
+        "insights": [
+          "Early-set dominance; finals often resolved by set 3",
+          "Men’s finals increasingly competitive over time; women’s dominance margins stable"
+        ],
+        "artifacts": [
+          "Australian Open Visual Analysis.pdf",
+          "Australian Open Visual Analysis.twb"
+        ]
+      }
+    ]
+  },
+
+  "interview_improvement_plan": {
+    "data_visualization_portfolio": {
+      "status": "Completed (phase 1)",
+      "next_actions": [
+        "Publish dashboard links/screenshots in portfolio",
+        "Add narrative on business impact and decisions enabled",
+        "Optionally rebuild in Power BI for cross-tool parity"
+      ]
+    },
+    "enterprise_data_scale": {
+      "status": "Planned",
+      "notes": [
+        "Demonstrated long-horizon analytics (1988–2024 trade; century of tennis) in Tableau. Next: 1–10M row dataset."
+      ]
+    }
+  },
+
+  "quantification_examples": [
+    "Reduced variance analysis cycle time by ~25%",
+    "Improved vendor compensation processing by ~20%",
+    "Achieved ≥95% on-time month-end delivery",
+    "Automated content retrieval saving ~1,200 hours/year"
+  ],
+
+  "profile_update_process": [
+    "Reviewed interview feedback and identified specific gaps",
+    "Standardized salary/location block using target structure",
+    "Converted major achievements into STAR stories across projects and roles",
+    "Quantified outcomes with concrete metrics where evidence exists",
+    "Included domain keywords (RAG, embeddings, vector DB, CI/CD-ready deployment)",
+    "Added soft-skill examples tied to project delivery",
+    "Updated skills with proficiency scales and language versions",
+    "Ready to re-run embedding script after saving this JSON"
+  ],
+
+  "_meta": {
+    "last_editor": "GPT-5 Thinking",
+    "updated_at": "2025-09-27T19:00:00+10:00"
+  }
+}
