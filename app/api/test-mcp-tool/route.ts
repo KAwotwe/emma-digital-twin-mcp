@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server'
+import { ragQuery } from '@/lib/digital-twin'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    console.log('Testing MCP endpoint with tool call...')
+    console.log('Testing RAG query directly...')
+    
+    // Test RAG query directly first
+    const directResult = await ragQuery({
+      question: "Tell me about Emmanuel's education",
+      topK: 3,
+      includeMetadata: true
+    })
+    
+    console.log('Direct RAG query successful')
+    
+    // Get the base URL from the request
+    const url = new URL(request.url)
+    const baseUrl = `${url.protocol}//${url.host}`
     
     // Test the MCP endpoint with a tool call
-    const mcpResponse = await fetch('http://localhost:3000/api/mcp', {
+    const mcpResponse = await fetch(`${baseUrl}/api/sse`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,6 +57,7 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
+      directRAGResult: directResult,
       mcpStatus: mcpResponse.status,
       mcpContentType: contentType,
       mcpResponse: mcpData,
@@ -50,11 +65,12 @@ export async function GET() {
     })
     
   } catch (error) {
-    console.error('MCP tool call test error:', error)
+    console.error('RAG/MCP tool call test error:', error)
     
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
+      errorStack: error instanceof Error ? error.stack : undefined,
       timestamp: new Date().toISOString()
     }, { status: 500 })
   }
