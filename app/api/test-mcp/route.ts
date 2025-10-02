@@ -1,11 +1,25 @@
 import { NextResponse } from 'next/server'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
     console.log('Testing MCP endpoint...')
     
+    // Environment variable check
+    const envVars = {
+      UPSTASH_VECTOR_REST_URL: process.env.UPSTASH_VECTOR_REST_URL,
+      UPSTASH_VECTOR_REST_TOKEN: process.env.UPSTASH_VECTOR_REST_TOKEN ? '[SET]' : '[MISSING]',
+      GROQ_API_KEY: process.env.GROQ_API_KEY ? '[SET]' : '[MISSING]'
+    }
+    
+    console.log('Environment variables:', envVars)
+    
+    // Get the base URL from the request
+    const url = new URL(request.url)
+    const baseUrl = `${url.protocol}//${url.host}`
+    console.log('Base URL:', baseUrl)
+    
     // Test the MCP endpoint with proper headers
-    const mcpResponse = await fetch('http://localhost:3000/api/mcp', {
+    const mcpResponse = await fetch(`${baseUrl}/api/mcp`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -38,6 +52,8 @@ export async function GET() {
     
     return NextResponse.json({
       success: true,
+      baseUrl,
+      envVars,
       mcpStatus: mcpResponse.status,
       mcpContentType: contentType,
       mcpResponse: mcpData,
@@ -47,9 +63,17 @@ export async function GET() {
   } catch (error) {
     console.error('MCP test error:', error)
     
+    // Environment variable check for error context
+    const envVars = {
+      UPSTASH_VECTOR_REST_URL: process.env.UPSTASH_VECTOR_REST_URL,
+      UPSTASH_VECTOR_REST_TOKEN: process.env.UPSTASH_VECTOR_REST_TOKEN ? '[SET]' : '[MISSING]',
+      GROQ_API_KEY: process.env.GROQ_API_KEY ? '[SET]' : '[MISSING]'
+    }
+    
     return NextResponse.json({
       success: false,
       error: error instanceof Error ? error.message : 'Unknown error',
+      envVars,
       timestamp: new Date().toISOString()
     }, { status: 500 })
   }

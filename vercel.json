@@ -5,9 +5,34 @@
   "functions": {
     "app/api/[transport]/route.ts": {
       "maxDuration": 30
+    },
+    "app/api/test-mcp/route.ts": {
+      "maxDuration": 15
+    },
+    "app/api/health/route.ts": {
+      "maxDuration": 10
     }
   },
   "env": {
     "PNPM_VERSION": "9"
-  }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET, POST, PUT, DELETE, OPTIONS"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "Content-Type, Authorization"
+        }
+      ]
+    }
+  ]
 }
