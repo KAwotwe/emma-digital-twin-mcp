@@ -4,10 +4,16 @@
   "framework": "nextjs",
   "functions": {
     "app/api/[transport]/route.ts": {
-      "maxDuration": 30
+      "maxDuration": 60
     },
     "app/api/test-mcp/route.ts": {
-      "maxDuration": 15
+      "maxDuration": 30
+    },
+    "app/api/test-mcp-tool/route.ts": {
+      "maxDuration": 30
+    },
+    "app/api/populate-vector/route.ts": {
+      "maxDuration": 60
     },
     "app/api/health/route.ts": {
       "maxDuration": 10
