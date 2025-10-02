@@ -1,0 +1,13 @@
+{
+  "buildCommand": "pnpm build",
+  "installCommand": "pnpm install --frozen-lockfile=false",
+  "framework": "nextjs",
+  "functions": {
+    "app/api/[transport]/route.ts": {
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "PNPM_VERSION": "9"
+  }
+}
