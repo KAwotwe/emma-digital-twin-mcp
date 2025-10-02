@@ -99,7 +99,7 @@ export default function Home() {
           <div className="space-y-2 text-sm">
             <p><strong>Server Name:</strong> digital-twin-mcp-server</p>
             <p><strong>Version:</strong> 1.0.0</p>
-            <p><strong>MCP Endpoint:</strong> <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">http://localhost:3000/api/mcp</code></p>
+            <p><strong>MCP Endpoint:</strong> <code className="bg-gray-100 dark:bg-gray-800 px-2 py-1 rounded">https://emma-digital-twin-mcp.vercel.app/api/mcp</code></p>
             <p><strong>Tool Name:</strong> query_digital_twin</p>
           </div>
         </div>
@@ -120,7 +120,7 @@ export default function Home() {
       "args": [
         "-y",
         "mcp-remote",
-        "http://localhost:3000/api/mcp"
+        "https://emma-digital-twin-mcp.vercel.app/api/mcp"
       ]
     }
   }
@@ -137,7 +137,7 @@ export default function Home() {
       "command": "node",
       "args": [
         "-e",
-        "const { spawn } = require('child_process'); const proc = spawn('npx', ['-y', 'mcp-remote', 'http://localhost:3000/api/mcp'], { stdio: 'inherit' }); proc.on('exit', process.exit);"
+        "const { spawn } = require('child_process'); const proc = spawn('npx', ['-y', 'mcp-remote', 'https://emma-digital-twin-mcp.vercel.app/api/mcp'], { stdio: 'inherit' }); proc.on('exit', process.exit);"
       ]
     }
   }
