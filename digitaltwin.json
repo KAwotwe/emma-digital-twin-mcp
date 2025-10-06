@@ -112,6 +112,60 @@
       "team_size": "2–3 (academic collaboration)",
       "duration": "Semester project",
       "budget_managed": "N/A"
+    },
+    {
+      "project_name": "Motor Vehicle Insurance Premium Pricing Model (Regression)",
+      "situation": "Motor vehicle insurers faced challenges in competitive pricing while maintaining profitability due to heterogeneous risk drivers, inconsistent rating channels, and manual pricing processes requiring accurate, explainable, and scalable premium prediction.",
+      "task": "Develop ML regression models to accurately predict net premium amounts based on customer, vehicle, policy, and claims data while maintaining interpretability and addressing pricing governance requirements.",
+      "action": "Removed PII and engineered features (driver_age_years, license_tenure_years, vehicle_age_years) from dates; median/mode-imputed missing values; standardized and one-hot encoded features; built and evaluated Dummy Regressor baseline, Ridge Regression (α=0.1), Lasso Regression, and KNN Regression using consistent preprocessing pipelines; assessed models using Mean Absolute Error (MAE) for interpretability.",
+      "result": "Ridge Regression champion model achieved validation MAE ~127.95 and test MAE ~216.43, representing ~13% validation error reduction and ~7% test improvement over baseline; demonstrated how ML-based pricing reduces mispricing and improves retention; proposed assistive deployment with human-validated pricing, MAE tracking, drift alerts, and fairness audits.",
+      "technologies": ["Python", "pandas", "scikit-learn", "Ridge Regression", "Lasso Regression", "KNN Regression", "Matplotlib", "Altair", "Pipelines", "OneHotEncoder", "StandardScaler"],
+      "team_size": "Individual",
+      "duration": "Semester project (Business Analytics Masters)",
+      "budget_managed": "N/A",
+      "kpis": {
+        "validation_mae": 127.95,
+        "test_mae": 216.43,
+        "validation_improvement_pct": 13,
+        "test_improvement_pct": 7
+      },
+      "governance_considerations": [
+        "Explainable linear models for regulatory compliance",
+        "Drift monitoring and model calibration frameworks",
+        "Fairness audits and bias detection",
+        "Human-in-the-loop validation process"
+      ]
+    },
+    {
+      "project_name": "Credit Risk Classification Model for Banking Customers (Classification)",
+      "situation": "Traditional rule-based credit assessment systems in banking were limited by bias and rigidity. The bank needed automated classification of customers into Good, Standard, and Poor credit-rating categories to enhance accuracy, fairness, and interpretability in loan approvals, pricing, and retention decisions.",
+      "task": "Build ML classification models to categorize ~48 financial and behavioral variables (repayment history, capacity, leverage, utilization, credit history depth) into credit ratings while addressing moderate class imbalance (Standard: 53%, Poor: 29%, Good: 18%) and maintaining ethical governance.",
+      "action": "Removed PII and unstable fields to prevent leakage; performed median imputation and ordinal/one-hot encoding; grouped features by mechanism (delinquency, capacity, utilization); used stratified splits to preserve class proportions; progressively experimented with Dummy Classifier baseline (accuracy ≈0.53, macro-F1 ≈0.37), Decision Tree, Random Forest (rf8 champion), Extra Trees, and Tuned Random Forest; evaluated using Accuracy, Precision, Recall, Macro/Weighted F1-score; conducted feature-importance analysis.",
+      "result": "Random Forest (rf8) champion model achieved accuracy ≈0.71 and F1 ≈0.72, representing ~18-point accuracy uplift and nearly doubled macro-F1 vs baseline; identified delinquency and credit-utilization as strongest predictors; reduced critical misclassifications (Poor as Good) significantly; projected 5–8% reduction in misclassification losses; deemed production-ready for pilot deployment with monitoring dashboards tracking accuracy drift, class recall, and fairness metrics.",
+      "technologies": ["Python", "pandas", "scikit-learn", "DecisionTreeClassifier", "RandomForestClassifier", "ExtraTreesClassifier", "GridSearchCV", "RandomizedSearchCV", "Altair", "Matplotlib", "Feature Importance Analysis"],
+      "team_size": "Individual",
+      "duration": "Semester project (Business Analytics Masters)",
+      "budget_managed": "N/A",
+      "kpis": {
+        "accuracy": 0.71,
+        "macro_f1": 0.72,
+        "accuracy_uplift_points": 18,
+        "baseline_accuracy": 0.53,
+        "baseline_macro_f1": 0.37,
+        "projected_loss_reduction_pct": "5-8"
+      },
+      "governance_considerations": [
+        "Exclusion of sensitive demographic attributes for fairness",
+        "Compliance with Australian Privacy Act (1988)",
+        "Fairness audits and bias monitoring",
+        "SHAP explainability framework consideration",
+        "Production monitoring for accuracy drift and class-specific recall"
+      ],
+      "future_enhancements": [
+        "SMOTE-based rebalancing for minority classes",
+        "SHAP explainability integration",
+        "XGBoost experimentation for performance gains"
+      ]
     }
   ],
 
@@ -185,7 +239,28 @@
       ],
       "databases": ["PostgreSQL", "Upstash Vector", "ChromaDB", "SAP (ERP data)"],
       "cloud_platforms": ["Vercel", "Upstash", "Groq API", "V0.dev"],
-      "ai_ml": ["RAG systems", "Vector search", "LLM integration", "Embedding models (Ollama)", "Evaluation frameworks"],
+      "ai_ml": [
+        "RAG systems", 
+        "Vector search", 
+        "LLM integration", 
+        "Embedding models (Ollama)", 
+        "Evaluation frameworks",
+        "Supervised Learning (Regression & Classification)",
+        "Model Selection & Hyperparameter Tuning",
+        "Feature Engineering & Selection",
+        "Ridge Regression",
+        "Lasso Regression",
+        "KNN Regression",
+        "Random Forest",
+        "Decision Trees",
+        "Extra Trees",
+        "GridSearchCV / RandomizedSearchCV",
+        "Model Evaluation (MAE, RMSE, Accuracy, Precision, Recall, F1)",
+        "Feature Importance Analysis",
+        "Model Governance & Drift Monitoring",
+        "Fairness Audits & Bias Detection",
+        "Explainable AI (SHAP concepts)"
+      ],
       "business_tools": ["Power BI", "Tableau", "MS Office", "SAS", "Tally", "ClickUp", "IsoMetrix"]
     },
     "soft_skills": [
@@ -200,7 +275,11 @@
       "Client Communication",
       "Project Leadership",
       "Data Storytelling",
-      "Visual Analytics"
+      "Visual Analytics",
+      "Model Governance & Risk Management",
+      "Ethical AI & Fairness Consideration",
+      "Business Impact Translation",
+      "Regulatory Compliance Awareness"
     ],
     "certifications": [
       { "name": "ACCA Qualification Level 3", "status": "In Progress", "expected_completion": "Dec 2026", "expires": "N/A" },
@@ -243,7 +322,9 @@
           "Employee Performance Prediction Project",
           "Tesla Stock Price Forecasting (LR vs LSTM)",
           "Australian International Trade Tableau Analysis",
-          "Australian Open Finals Tableau Analysis"
+          "Australian Open Finals Tableau Analysis",
+          "Motor Vehicle Insurance Premium Pricing Model (Regression)",
+          "Credit Risk Classification Model for Banking Customers (Classification)"
         ]
       },
       {
@@ -317,7 +398,10 @@
     "Reduced variance analysis cycle time by ~25%",
     "Improved vendor compensation processing by ~20%",
     "Achieved ≥95% on-time month-end delivery",
-    "Automated content retrieval saving ~1,200 hours/year"
+    "Automated content retrieval saving ~1,200 hours/year",
+    "Achieved ~13% validation error reduction and ~7% test improvement in insurance premium pricing model",
+    "Delivered ~18-point accuracy uplift and nearly doubled macro-F1 in credit risk classification",
+    "Projected 5–8% reduction in credit misclassification losses through ML model deployment"
   ],
 
   "profile_update_process": [
@@ -331,8 +415,5 @@
     "Ready to re-run embedding script after saving this JSON"
   ],
 
-  "_meta": {
-    "last_editor": "GPT-5 Thinking",
-    "updated_at": "2025-09-27T19:00:00+10:00"
-  }
+  "last_updated": "2025-10-06"
 }

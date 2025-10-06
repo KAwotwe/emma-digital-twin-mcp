@@ -132,6 +132,18 @@ def setup_vector_database(force_reload=False):
                     kpi_text = " Key Metrics: " + "; ".join([f"{k}: {v}" for k, v in kpis.items()])
                     project_text += kpi_text
                 
+                # Add governance considerations if available
+                governance = project.get('governance_considerations', [])
+                if governance:
+                    governance_text = " Governance & Ethics: " + "; ".join(governance)
+                    project_text += governance_text
+                
+                # Add future enhancements if available
+                future_enhancements = project.get('future_enhancements', [])
+                if future_enhancements:
+                    future_text = " Future Enhancements: " + "; ".join(future_enhancements)
+                    project_text += future_text
+                
                 vectors.append((
                     f"project_{i+1}",
                     project_text,
@@ -368,9 +380,9 @@ def classify_query_intent(query_text):
     # Define intent keywords with enhanced coverage
     intents = {
         'experience': ['work', 'job', 'experience', 'employment', 'company', 'role', 'position', 'career history', 'ausbiz', 'newmont', 'rigglets', 'intern', 'accountant', 'associate'],
-        'skills': ['skill', 'technology', 'programming', 'language', 'tool', 'framework', 'technical', 'software', 'python', 'sql', 'javascript', 'database', 'cloud', 'proficiency'],
+        'skills': ['skill', 'technology', 'programming', 'language', 'tool', 'framework', 'technical', 'software', 'python', 'sql', 'javascript', 'database', 'cloud', 'proficiency', 'machine learning', 'ml', 'regression', 'classification', 'modeling', 'scikit-learn'],
         'education': ['education', 'degree', 'university', 'school', 'qualification', 'certification', 'course', 'msc', 'bsc', 'masters', 'bachelor', 'uts', 'ghana', 'acca'],
-        'projects': ['project', 'portfolio', 'github', 'built', 'developed', 'created', 'app', 'application', 'rag', 'food', 'tableau', 'dashboard', 'analytics', 'tennis', 'trade'],
+        'projects': ['project', 'portfolio', 'github', 'built', 'developed', 'created', 'app', 'application', 'rag', 'food', 'tableau', 'dashboard', 'analytics', 'tennis', 'trade', 'insurance', 'premium', 'credit risk', 'banking', 'random forest', 'ridge', 'lasso'],
         'personal': ['about', 'who', 'background', 'summary', 'introduction', 'overview', 'tell me', 'elevator pitch'],
         'career_goals': ['goal', 'future', 'aspiration', 'plan', 'want', 'looking for', 'seeking', 'next', 'career path'],
         'salary': ['salary', 'compensation', 'pay', 'money', 'rate', 'wage', 'location preference', 'visa', 'authorization', 'remote', 'hybrid', 'relocation'],
@@ -554,6 +566,7 @@ Or ask natural questions about:
 • **Work experience** - AUSBIZ, Newmont, De Rigglets roles with STAR format achievements
 • **Technical skills** - Python, SQL, JavaScript with proficiency levels and years of experience  
 • **AI/ML projects** - Food RAG system, vector databases, LLM integration
+• **Machine Learning** - Insurance premium pricing (regression), credit risk classification, model evaluation, governance
 • **Portfolio** - Tableau dashboards, trade analytics, tennis analytics with KPIs
 • **Education** - MSc Business Analytics (UTS), BSc Administration (Ghana), ACCA progress
 • **Quantified achievements** - Specific metrics like time savings, delivery rates, improvements
@@ -652,6 +665,8 @@ def rag_query(index, groq_client, question, profile_data=None):
             intent_context = "Describe leadership examples using STAR format, team coordination, project management, and cross-functional collaboration."
         elif intent == 'portfolio':
             intent_context = "Showcase portfolio evidence, dashboard examples, visualizations, and specific business insights delivered."
+        elif intent == 'skills' and any(keyword in question.lower() for keyword in ['machine learning', 'ml', 'model', 'regression', 'classification']):
+            intent_context = "Emphasize machine learning expertise including regression and classification projects, model evaluation metrics (MAE, accuracy, F1), feature engineering, model governance, and ethical AI considerations with specific quantified outcomes."
         
         prompt = f"""Based on the following information about yourself, answer the question.
 {intent_context if intent_context else ''}
@@ -719,6 +734,10 @@ def main():
     print("  - 'Tell me about your work experience at AUSBIZ Consulting'")
     print("  - 'What are your Python and AI/ML skills and proficiency levels?'")
     print("  - 'Describe your Food RAG project using the STAR format'")
+    print("  - 'Tell me about your machine learning projects in regression and classification'")
+    print("  - 'What machine learning models have you built and what were the outcomes?'")
+    print("  - 'Describe your insurance premium pricing model project'")
+    print("  - 'Tell me about your credit risk classification model with Random Forest'")
     print("  - 'What are your quantified achievements and measurable outcomes?'")
     print("  - 'Tell me about your Tableau dashboard portfolio'")
     print("  - 'What are your salary expectations and work authorization status?'")
