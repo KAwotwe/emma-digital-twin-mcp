@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "digitaltwin-versel": {
+      "type": "http",
+      "url": "https://emma-digital-twin-mcp.vercel.app/api/mcp"
+    }
+  }
+}

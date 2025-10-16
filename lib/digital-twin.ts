@@ -24,6 +24,36 @@ export const digitalTwinQuerySchema = z.object({
 
 export type DigitalTwinQuery = z.infer<typeof digitalTwinQuerySchema>
 
+// Enhanced query schema with LLM preprocessing options
+export const enhancedDigitalTwinQuerySchema = z.object({
+  question: z.string().min(1, 'Question cannot be empty').max(500, 'Question too long'),
+  topK: z.number().min(1).max(10).optional().default(3),
+  includeMetadata: z.boolean().optional().default(true),
+  filterByType: z.string().optional(),
+  enableQueryEnhancement: z.boolean().optional().default(true),
+  enableInterviewMode: z.boolean().optional().default(true),
+  includeDebugInfo: z.boolean().optional().default(false)
+})
+
+export type EnhancedDigitalTwinQuery = z.infer<typeof enhancedDigitalTwinQuerySchema>
+
+// Enhanced response interface with additional metadata
+export interface EnhancedDigitalTwinResponse extends DigitalTwinResponse {
+  enhancedQuery?: string
+  processingSteps?: {
+    queryEnhancement: boolean
+    interviewFormatting: boolean
+    originalQuery: string
+  }
+  debugInfo?: {
+    enhancementTime?: number
+    searchTime?: number
+    generationTime?: number
+    formattingTime?: number
+    totalTime?: number
+  }
+}
+
 // Environment variable validation
 const requiredEnvVars = {
   UPSTASH_VECTOR_REST_URL: process.env.UPSTASH_VECTOR_REST_URL,
@@ -149,6 +179,136 @@ function loadProfileData(): ProfileData {
     }
   }
   return profileData
+}
+
+// ============================================
+// ENHANCED MCP SERVER ARCHITECTURE - STEP 2
+// Query Preprocessing and Response Postprocessing
+// ============================================
+
+/**
+ * Step 1: Query Preprocessing with LLM Enhancement
+ * Enhances user questions to improve vector search accuracy
+ * Adds synonyms, context, and interview-specific focus
+ */
+async function preprocessQuery(originalQuery: string): Promise<string> {
+  try {
+    console.log('🔍 Preprocessing query with LLM enhancement...')
+    
+    const enhancementPrompt = `You are an interview preparation assistant helping to improve search queries.
+
+Your task: Enhance this question to better search a professional profile database.
+
+Original Question: "${originalQuery}"
+
+Enhancement Guidelines:
+1. Add relevant synonyms and related terms
+2. Focus on interview-relevant aspects (experience, skills, achievements)
+3. Expand context for better semantic matching
+4. Keep it concise but comprehensive
+5. Maintain the original intent
+
+Examples:
+- "Tell me about Python" → "Python programming experience projects skills proficiency years hands-on development data analysis"
+- "Your leadership" → "leadership experience team management coordination mentoring examples achievements results"
+
+Return ONLY the enhanced query text, no explanations:`
+
+    const response = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'user',
+          content: enhancementPrompt
+        }
+      ],
+      model: 'llama-3.1-8b-instant',
+      temperature: 0.3, // Lower temperature for consistent enhancement
+      max_tokens: 150
+    })
+
+    const enhancedQuery = response.choices[0]?.message?.content?.trim() || originalQuery
+    
+    console.log(`✅ Query enhanced: "${originalQuery}" → "${enhancedQuery}"`)
+    return enhancedQuery
+    
+  } catch (error) {
+    console.error('⚠️ Query enhancement failed, using original query:', error)
+    return originalQuery // Graceful fallback
+  }
+}
+
+/**
+ * Step 2: Response Postprocessing for Interview Context
+ * Formats RAG responses specifically for interview preparation
+ * Applies STAR format, highlights metrics, ensures professional tone
+ */
+async function postprocessForInterview(
+  rawResponse: string,
+  originalQuestion: string,
+  relevantContext: string
+): Promise<string> {
+  try {
+    console.log('✨ Post-processing response for interview context...')
+    
+    const formattingPrompt = `You are an expert interview coach helping a candidate prepare compelling responses.
+
+Original Question: "${originalQuestion}"
+
+Candidate's Raw Response:
+${rawResponse}
+
+Relevant Professional Data:
+${relevantContext}
+
+Your task: Transform this into an interview-ready response that:
+
+1. **Uses STAR Format** (when appropriate for behavioral questions):
+   - Situation: Set the context
+   - Task: Explain the challenge/goal
+   - Action: Describe specific actions taken
+   - Result: Highlight quantified outcomes and impact
+
+2. **Emphasizes Achievements**:
+   - Highlight specific metrics (percentages, time saved, delivery rates)
+   - Show measurable impact and business value
+   - Include concrete examples with numbers
+
+3. **Maintains Professional Tone**:
+   - Confident but not arrogant
+   - Natural conversational flow
+   - First-person perspective ("I developed...", "I achieved...")
+   - Direct and clear
+
+4. **Addresses the Question Directly**:
+   - Start with a clear answer
+   - Provide supporting details
+   - End with impact/results
+
+IMPORTANT: Keep the response authentic and based only on the provided data. Do not invent information.
+
+Provide the enhanced interview response:`
+
+    const response = await groq.chat.completions.create({
+      messages: [
+        {
+          role: 'user',
+          content: formattingPrompt
+        }
+      ],
+      model: 'llama-3.1-8b-instant',
+      temperature: 0.7, // Balanced for natural yet consistent responses
+      max_tokens: 600
+    })
+
+    const formattedResponse = response.choices[0]?.message?.content?.trim() || rawResponse
+    
+    console.log('✅ Response formatted for interview context')
+    return formattedResponse
+    
+  } catch (error) {
+    console.error('⚠️ Response formatting failed, using raw response:', error)
+    return rawResponse // Graceful fallback
+  }
 }
 
 // Intent classification
@@ -595,5 +755,153 @@ export async function ragQuery(query: DigitalTwinQuery): Promise<DigitalTwinResp
   } catch (error) {
     console.error('Error during RAG query:', error)
     throw new Error('Failed to process query: ' + (error instanceof Error ? error.message : 'Unknown error'))
+  }
+}
+
+// ============================================
+// ENHANCED RAG QUERY WITH LLM PREPROCESSING AND POSTPROCESSING
+// This implements the architecture pattern from Step 2
+// ============================================
+
+/**
+ * Enhanced RAG Query with full LLM preprocessing and postprocessing pipeline
+ * 
+ * Pipeline Flow:
+ * 1. User Question → LLM Query Enhancement → Enhanced Query
+ * 2. Enhanced Query → Vector Search → Raw Results
+ * 3. Raw Results → Context Assembly → LLM Response Generation
+ * 4. LLM Response → Interview Formatting → Final Response
+ * 
+ * @param query - Enhanced query parameters with preprocessing options
+ * @returns Enhanced response with optional debug information
+ */
+export async function enhancedRAGQuery(
+  query: EnhancedDigitalTwinQuery
+): Promise<EnhancedDigitalTwinResponse> {
+  try {
+    const startTime = Date.now()
+    console.log('🚀 Processing enhanced digital twin query:', query.question)
+    console.log('📋 Options:', {
+      queryEnhancement: query.enableQueryEnhancement,
+      interviewMode: query.enableInterviewMode,
+      debugInfo: query.includeDebugInfo
+    })
+    
+    // Initialize debug timing
+    const debugInfo: EnhancedDigitalTwinResponse['debugInfo'] = {
+      enhancementTime: 0,
+      searchTime: 0,
+      generationTime: 0,
+      formattingTime: 0,
+      totalTime: 0
+    }
+    
+    // STEP 1: Query Preprocessing with LLM Enhancement
+    let searchQuery = query.question
+    const enhancementStart = Date.now()
+    
+    if (query.enableQueryEnhancement) {
+      searchQuery = await preprocessQuery(query.question)
+      debugInfo.enhancementTime = Date.now() - enhancementStart
+    } else {
+      console.log('⏭️  Query enhancement disabled, using original query')
+    }
+    
+    // STEP 2: Vector Search with Enhanced Query
+    const searchStart = Date.now()
+    let relevantChunks = await vectorSearch(searchQuery, query.topK)
+    
+    if (relevantChunks.length === 0) {
+      console.log('Vector search returned no results, using keyword search fallback')
+      const searchResults = searchContent(searchQuery, query.filterByType)
+      relevantChunks = searchResults.map(result => ({
+        chunk: {
+          title: result.chunk.title,
+          content: result.chunk.content,
+          type: result.chunk.type,
+          metadata: result.chunk.metadata
+        } as Record<string, unknown>,
+        relevance: result.relevance
+      }))
+    }
+    
+    debugInfo.searchTime = Date.now() - searchStart
+    console.log(`✅ Found ${relevantChunks.length} relevant content chunks (${debugInfo.searchTime}ms)`)
+    
+    // Log top results
+    relevantChunks.slice(0, query.topK).forEach((result, index) => {
+      const title = (result.chunk.title as string) || 'No title'
+      console.log(`${index + 1}. ${title} (Relevance: ${result.relevance.toFixed(3)})`)
+    })
+    
+    // STEP 3: Response Generation with Context
+    const generationStart = Date.now()
+    const rawAnswer = await generateResponse(query.question, relevantChunks.slice(0, query.topK))
+    debugInfo.generationTime = Date.now() - generationStart
+    
+    // STEP 4: Response Postprocessing for Interview Context
+    let finalAnswer = rawAnswer
+    const formattingStart = Date.now()
+    
+    if (query.enableInterviewMode) {
+      // Create context string from relevant chunks for interview formatting
+      const context = relevantChunks
+        .slice(0, query.topK)
+        .map(r => `${r.chunk.title}: ${r.chunk.content}`)
+        .join('\n\n')
+      
+      finalAnswer = await postprocessForInterview(rawAnswer, query.question, context)
+      debugInfo.formattingTime = Date.now() - formattingStart
+    } else {
+      console.log('⏭️  Interview mode disabled, using raw response')
+    }
+    
+    // Format sources
+    const sources = relevantChunks.slice(0, query.topK).map(result => {
+      const chunk = result.chunk
+      const metadata = chunk.metadata as Record<string, unknown> | undefined
+      return {
+        title: (chunk.title as string) || 'Unknown Source',
+        category: (metadata?.category as string) || (chunk.type as string) || 'general',
+        relevance: Math.round(result.relevance * 1000) / 1000
+      }
+    })
+    
+    // Calculate total time
+    debugInfo.totalTime = Date.now() - startTime
+    
+    console.log('🎉 Enhanced digital twin query completed successfully')
+    if (query.includeDebugInfo) {
+      console.log('⏱️  Performance:', debugInfo)
+    }
+    
+    // Build enhanced response
+    const response: EnhancedDigitalTwinResponse = {
+      question: query.question,
+      answer: finalAnswer,
+      sources,
+      timestamp: new Date().toISOString(),
+      processingSteps: {
+        queryEnhancement: query.enableQueryEnhancement ?? true,
+        interviewFormatting: query.enableInterviewMode ?? true,
+        originalQuery: query.question
+      }
+    }
+    
+    // Add enhanced query if preprocessing was enabled
+    if (query.enableQueryEnhancement && searchQuery !== query.question) {
+      response.enhancedQuery = searchQuery
+    }
+    
+    // Add debug info if requested
+    if (query.includeDebugInfo) {
+      response.debugInfo = debugInfo
+    }
+    
+    return response
+    
+  } catch (error) {
+    console.error('❌ Error during enhanced RAG query:', error)
+    throw new Error('Failed to process enhanced query: ' + (error instanceof Error ? error.message : 'Unknown error'))
   }
 }
