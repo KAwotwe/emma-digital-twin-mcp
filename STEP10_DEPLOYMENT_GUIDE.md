@@ -19,7 +19,7 @@
 2. Click "Add New"
 3. Fill in:
    - **Key**: `ELEVENLABS_API_KEY`
-   - **Value**: `sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483`
+   - **Value**: `<your_elevenlabs_api_key_from_dashboard>`
    - **Environments**: ✅ Production, ✅ Preview, ✅ Development
 4. Click "Save"
 
@@ -33,7 +33,7 @@ vercel login
 
 # Add environment variable
 vercel env add ELEVENLABS_API_KEY
-# When prompted, paste: sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483
+# When prompted, paste: <your_elevenlabs_api_key_from_dashboard>
 # Select: Production, Preview, Development
 ```
 
@@ -155,7 +155,7 @@ Start-Process emmanuel_response.mp3
 cat .env.local | Select-String "ELEVENLABS"
 
 # Should show:
-# ELEVENLABS_API_KEY=sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483
+# ELEVENLABS_API_KEY=sk_xxxxx... (your actual key)
 ```
 
 ### **Issue: MCP Shows Only 14 Tools Instead of 16**

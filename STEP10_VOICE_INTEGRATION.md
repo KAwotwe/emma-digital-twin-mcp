@@ -11,7 +11,7 @@ Successfully integrated ElevenLabs voice capabilities into the Digital Twin MCP 
 ### 1. **Environment Configuration** ✅
 - Added `ELEVENLABS_API_KEY` to `.env.local`
 - Added `NEXT_PUBLIC_ELEVENLABS_API_KEY` for client-side access
-- API Key: `sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483`
+- API Key: `sk_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx` (stored securely in .env.local)
 
 ### 2. **ElevenLabs Voice Library** ✅
 **File:** `lib/elevenlabs-voice.ts`
@@ -235,12 +235,12 @@ User Voice Input
 ## 🔒 Security Notes
 
 ### ⚠️ **IMPORTANT:**
-Your API key `sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483` is visible in this documentation. Consider rotating it after deployment:
+Your API key is stored securely in `.env.local` and Vercel environment variables. For additional security:
 
 1. Go to: https://elevenlabs.io/app/settings/api-keys
-2. Delete the old key
-3. Generate new key
-4. Update `.env.local` and Vercel environment variables
+2. Verify your key is named appropriately (e.g., "DigitalTwin1")
+3. Rotate keys periodically for security
+4. Never commit API keys to version control
 
 ### **Environment Variable Management:**
 - ✅ API key stored in `.env.local` (not committed to Git)
@@ -259,12 +259,12 @@ Your API key `sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483` is visible in
 # Go to: https://vercel.com/kawotwe/emma-digital-twin-mcp/settings/environment-variables
 # Add:
 # Name: ELEVENLABS_API_KEY
-# Value: sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483
+# Value: <your_elevenlabs_api_key_here>
 # Scope: Production, Preview, Development
 
 # Option B: Via Vercel CLI
 vercel env add ELEVENLABS_API_KEY
-# Paste: sk_b2107dbae266aabfeda89f17f1c7a426f2e4fb39339d3483
+# Paste: <your_elevenlabs_api_key_here>
 ```
 
 ### **Step 2: Build and Test Locally**
