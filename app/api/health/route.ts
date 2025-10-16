@@ -7,6 +7,7 @@ export async function GET() {
       GROQ_API_KEY: process.env.GROQ_API_KEY ? 'SET' : 'MISSING',
       UPSTASH_VECTOR_REST_URL: process.env.UPSTASH_VECTOR_REST_URL ? 'SET' : 'MISSING',
       UPSTASH_VECTOR_REST_TOKEN: process.env.UPSTASH_VECTOR_REST_TOKEN ? 'SET' : 'MISSING',
+      ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY ? 'SET' : 'MISSING',
       NODE_ENV: process.env.NODE_ENV || 'unknown'
     }
     
