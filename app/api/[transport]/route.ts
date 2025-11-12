@@ -1403,7 +1403,7 @@ const handler = createMcpHandler(
           
           let responseText = `# ✅ New Conversation Session Created\n\n`
           responseText += `**Session ID:** \`${result.sessionId}\`\n\n`
-          responseText += `**Created At:** ${new Date(result.createdAt).toISOString()}\n\n`
+          responseText += `**Created At:** ${result.createdAt ? new Date(result.createdAt).toISOString() : 'N/A'}\n\n`
           responseText += `**Usage:** Use this session ID for \`query_with_memory\` to maintain conversation context.\n`
           
           return {
