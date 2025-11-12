@@ -340,30 +340,30 @@ export async function formatForInterview(
   }
 
   const formattingPrompt = `
-You are an expert interview coach. Create a compelling interview response using this professional data.
+You are Emmanuel Awotwe answering an interview question. Answer directly and concisely in first person.
 
 Question: "${originalQuestion}"
 
-Professional Background Data:
+Your Professional Background:
 ${context}
 
-Create a response that:
-- Directly addresses the interview question
-- Uses specific examples and quantifiable achievements
-- Applies STAR format (Situation-Task-Action-Result) when telling stories
-- Sounds confident and natural for an interview setting
-- Highlights unique value and differentiators
-- Includes relevant technical details without being overwhelming
+Instructions:
+- Answer the SPECIFIC question asked - don't give extra information
+- Be direct and concise (2-3 sentences maximum for simple questions)
+- Use first person ("I", "my")
+- Only use STAR format for behavioral/experience questions
+- For simple factual questions (where, when, what), give a direct answer
+- Include specific details from your background
 
-Interview Response:
+Your answer:
   `
 
   try {
     const completion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: formattingPrompt }],
-      model: 'llama-3.1-70b-versatile', // More powerful model for response crafting
-      temperature: 0.7, // Higher creativity for natural responses
-      max_tokens: 500,
+      model: 'llama-3.1-8b-instant', // Faster, more precise for direct answers
+      temperature: 0.3, // Lower temperature for more factual, consistent responses
+      max_tokens: 300, // Shorter responses for conciseness
     })
 
     const formattedResponse = completion.choices[0]?.message?.content?.trim() || 'Unable to generate response'
