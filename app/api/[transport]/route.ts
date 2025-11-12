@@ -7,7 +7,12 @@ import {
   contextAwareRAG,
   getInterviewTypes,
   testContextAwareRAG,
-  batchTestContextAware
+  batchTestContextAware,
+  memoryAwareDigitalTwinQuery,
+  createConversationSession,
+  getConversationHistoryAction,
+  clearConversationHistoryAction,
+  getActiveConversationSessions
 } from '@/app/actions/digital-twin-actions'
 import { type InterviewType } from '@/lib/rag-config'
 import { z } from 'zod'
@@ -1377,7 +1382,206 @@ const handler = createMcpHandler(
       }
     )
     
-    console.log('MCP Server: Tool registration complete (16 tools registered)')
+    // ============================================
+    // CONVERSATION MEMORY TOOLS (4 TOOLS)
+    // ============================================
+    
+    // Tool 17: Create Conversation Session
+    server.tool(
+      'create_conversation',
+      'Create a new conversation session for maintaining context across multiple queries',
+      {},
+      async () => {
+        try {
+          console.log('MCP Tool Called: create_conversation')
+          
+          const result = await createConversationSession()
+          
+          if (!result.success) {
+            throw new Error(result.error)
+          }
+          
+          let responseText = `# ✅ New Conversation Session Created\n\n`
+          responseText += `**Session ID:** \`${result.sessionId}\`\n\n`
+          responseText += `**Created At:** ${new Date(result.createdAt).toISOString()}\n\n`
+          responseText += `**Usage:** Use this session ID for \`query_with_memory\` to maintain conversation context.\n`
+          
+          return {
+            content: [{ type: 'text', text: responseText }]
+          }
+          
+        } catch (error) {
+          console.error('MCP Tool Error (Create Conversation):', error)
+          return {
+            content: [{
+              type: 'text',
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to create conversation'}`
+            }]
+          }
+        }
+      }
+    )
+    
+    // Tool 18: Query with Memory
+    server.tool(
+      'query_with_memory',
+      'Ask a question with conversation memory. This maintains context across multiple questions in the same session.',
+      {
+        question: z.string().describe('Question to ask the digital twin'),
+        sessionId: z.string().describe('Conversation session ID from create_conversation'),
+        interviewType: z.enum([
+          'auto',
+          'technical_interview',
+          'behavioral_interview',
+          'executive_interview',
+          'cultural_fit',
+          'system_design',
+          'quick_response'
+        ]).optional().describe('Type of interview context (default: auto-detect)')
+      },
+      async ({ question, sessionId, interviewType }) => {
+        try {
+          console.log('MCP Tool Called: query_with_memory')
+          console.log(`Session: ${sessionId}, Question: ${question}`)
+          
+          const result = await memoryAwareDigitalTwinQuery(question, sessionId, {
+            interviewType: (interviewType as InterviewType | 'auto') || 'auto'
+          })
+          
+          if (!result.success) {
+            throw new Error('Memory-aware query failed')
+          }
+          
+          let responseText = `# 💬 Digital Twin Response (with Memory)\n\n`
+          responseText += `**Question:** ${question}\n\n`
+          responseText += `**Answer:** ${result.response}\n\n`
+          responseText += `---\n\n`
+          responseText += `**Session ID:** \`${result.sessionId}\`\n`
+          responseText += `**Conversation Turns:** ${result.conversationHistory.length}\n`
+          responseText += `**Interview Type:** ${result.interviewType}\n`
+          
+          if (result.cacheHit) {
+            responseText += `**Cache:** ✅ Hit (faster response)\n`
+          }
+          
+          if (result.metrics) {
+            responseText += `**Processing Time:** ${result.metrics.totalTime}ms\n`
+          }
+          
+          return {
+            content: [{ type: 'text', text: responseText }]
+          }
+          
+        } catch (error) {
+          console.error('MCP Tool Error (Query with Memory):', error)
+          return {
+            content: [{
+              type: 'text',
+              text: `Error: ${error instanceof Error ? error.message : 'Memory-aware query failed'}`
+            }]
+          }
+        }
+      }
+    )
+    
+    // Tool 19: Get Conversation History
+    server.tool(
+      'get_conversation_history',
+      'Get the conversation history for a session, including all previous questions and answers',
+      {
+        sessionId: z.string().describe('Conversation session ID')
+      },
+      async ({ sessionId }) => {
+        try {
+          console.log('MCP Tool Called: get_conversation_history')
+          console.log(`Session: ${sessionId}`)
+          
+          const result = await getConversationHistoryAction(sessionId)
+          
+          if (!result.success) {
+            throw new Error(result.error)
+          }
+          
+          let responseText = `# 📜 Conversation History\n\n`
+          responseText += `**Session ID:** \`${sessionId}\`\n`
+          
+          if (result.stats) {
+            responseText += `**Total Turns:** ${result.stats.turnCount}\n`
+            responseText += `**Session Age:** ${Math.floor(result.stats.sessionAge / 1000)}s\n`
+            responseText += `**Last Active:** ${Math.floor(result.stats.lastActive / 1000)}s ago\n`
+          }
+          
+          responseText += `\n---\n\n`
+          
+          if (result.history && result.history.length > 0) {
+            responseText += `## Conversation:\n\n`
+            
+            result.history.forEach((turn, index) => {
+              const icon = turn.role === 'user' ? '👤' : '🤖'
+              const role = turn.role === 'user' ? 'User' : 'Assistant'
+              responseText += `### ${icon} ${role} (Turn ${index + 1})\n`
+              responseText += `${turn.content}\n\n`
+            })
+          } else {
+            responseText += `*No conversation history yet.*\n`
+          }
+          
+          return {
+            content: [{ type: 'text', text: responseText }]
+          }
+          
+        } catch (error) {
+          console.error('MCP Tool Error (Get History):', error)
+          return {
+            content: [{
+              type: 'text',
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to get history'}`
+            }]
+          }
+        }
+      }
+    )
+    
+    // Tool 20: Clear Conversation
+    server.tool(
+      'clear_conversation',
+      'Clear the conversation history for a session and start fresh',
+      {
+        sessionId: z.string().describe('Conversation session ID to clear')
+      },
+      async ({ sessionId }) => {
+        try {
+          console.log('MCP Tool Called: clear_conversation')
+          console.log(`Session: ${sessionId}`)
+          
+          const result = await clearConversationHistoryAction(sessionId)
+          
+          if (!result.success) {
+            throw new Error(result.error)
+          }
+          
+          let responseText = `# 🗑️ Conversation Cleared\n\n`
+          responseText += `**Session ID:** \`${sessionId}\`\n\n`
+          responseText += `**Status:** ✅ ${result.message}\n\n`
+          responseText += `You can now start a fresh conversation with this session ID.\n`
+          
+          return {
+            content: [{ type: 'text', text: responseText }]
+          }
+          
+        } catch (error) {
+          console.error('MCP Tool Error (Clear Conversation):', error)
+          return {
+            content: [{
+              type: 'text',
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to clear conversation'}`
+            }]
+          }
+        }
+      }
+    )
+    
+    console.log('MCP Server: Tool registration complete (20 tools registered)')
   },
   {
     serverInfo: {

@@ -1197,6 +1197,184 @@ export async function testCacheFunctionality(question: string = 'What are your m
   }
 }
 
+// ============================================================================
+// CONVERSATION MEMORY INTEGRATION
+// ============================================================================
+
+import { 
+  generateSessionId,
+  createSession,
+  getSession,
+  addTurn,
+  getConversationContext,
+  getConversationHistory,
+  clearSession,
+  getActiveSessions,
+  getSessionStats,
+  type ConversationTurn,
+  type ConversationSession
+} from '@/lib/conversation-memory'
+
+/**
+ * Memory-aware RAG query that includes conversation context
+ */
+export async function memoryAwareDigitalTwinQuery(
+  question: string,
+  sessionId: string,
+  options?: {
+    interviewType?: InterviewType | 'auto'
+    enableCache?: boolean
+  }
+) {
+  try {
+    console.log('\n💬 Memory-Aware Digital Twin Query')
+    console.log(`Session ID: ${sessionId}`)
+    console.log(`Question: "${question}"`)
+    
+    // Get conversation context
+    const conversationContext = getConversationContext(sessionId)
+    
+    // Add user turn to conversation history
+    addTurn(sessionId, 'user', question)
+    
+    // Build enhanced question with conversation context
+    let enhancedQuestion = question
+    if (conversationContext) {
+      console.log('📚 Including conversation context')
+      enhancedQuestion = `${conversationContext}\n\nCurrent question: ${question}`
+    }
+    
+    // Execute monitored RAG query with conversation context
+    const result = await monitoredDigitalTwinQuery(enhancedQuestion, {
+      interviewType: options?.interviewType || 'auto',
+      enableCache: options?.enableCache ?? true
+    })
+    
+    if (result.success) {
+      // Add assistant response to conversation history
+      addTurn(sessionId, 'assistant', result.response)
+      console.log('✅ Response added to conversation history')
+    }
+    
+    return {
+      success: result.success,
+      response: result.response,
+      sessionId,
+      conversationHistory: getConversationHistory(sessionId),
+      metrics: result.metrics,
+      cacheHit: result.cacheHit,
+      interviewType: result.interviewType
+    }
+    
+  } catch (error) {
+    console.error('❌ Memory-aware query failed:', error)
+    
+    return {
+      success: false,
+      response: `Error: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      sessionId,
+      conversationHistory: []
+    }
+  }
+}
+
+/**
+ * Create a new conversation session
+ */
+export async function createConversationSession() {
+  try {
+    const session = createSession()
+    
+    console.log(`✅ Created conversation session: ${session.sessionId}`)
+    
+    return {
+      success: true,
+      sessionId: session.sessionId,
+      createdAt: session.createdAt
+    }
+  } catch (error) {
+    console.error('Error creating session:', error)
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to create session'
+    }
+  }
+}
+
+/**
+ * Get conversation history for a session
+ */
+export async function getConversationHistoryAction(sessionId: string) {
+  try {
+    const history = getConversationHistory(sessionId)
+    const stats = getSessionStats(sessionId)
+    
+    return {
+      success: true,
+      sessionId,
+      history,
+      stats
+    }
+  } catch (error) {
+    console.error('Error getting conversation history:', error)
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get history'
+    }
+  }
+}
+
+/**
+ * Clear conversation history for a session
+ */
+export async function clearConversationHistoryAction(sessionId: string) {
+  try {
+    const cleared = clearSession(sessionId)
+    
+    console.log(`${cleared ? '✅' : '⚠️'} Cleared session: ${sessionId}`)
+    
+    return {
+      success: cleared,
+      message: cleared ? 'Conversation history cleared' : 'Session not found'
+    }
+  } catch (error) {
+    console.error('Error clearing conversation:', error)
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to clear history'
+    }
+  }
+}
+
+/**
+ * Get all active conversation sessions
+ */
+export async function getActiveConversationSessions() {
+  try {
+    const sessions = getActiveSessions()
+    
+    return {
+      success: true,
+      sessions: sessions.map(s => ({
+        sessionId: s.sessionId,
+        turnCount: s.history.length,
+        createdAt: s.createdAt,
+        lastAccessedAt: s.lastAccessedAt
+      }))
+    }
+  } catch (error) {
+    console.error('Error getting active sessions:', error)
+    
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'Failed to get sessions'
+    }
+  }
+}
+
 /**
  * ========================================================================
  * STEP 10: VOICE-ENHANCED DIGITAL TWIN

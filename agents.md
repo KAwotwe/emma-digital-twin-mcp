@@ -75,6 +75,10 @@ UPSTASH_VECTOR_REST_URL=your_upstash_vector_url_here
 - Environment variables properly loaded from .env.local file
 - Enhanced intent classification for better query understanding
 - Groq integration for high-quality response generation
+- **Conversation Memory**: Multi-turn context awareness with session management
+- **Voice Integration**: Speech-to-text and text-to-speech with ElevenLabs
+- **Performance Optimization**: Intelligent caching with 60-80% faster responses
+- **MCP Server**: 20 tools including memory-aware queries and voice capabilities
 
 
 
@@ -96,11 +100,15 @@ UPSTASH_VECTOR_REST_URL=your_upstash_vector_url_here
 
 ## RAG implementation flow
 1. **Input**: User question about professional background
-2. **Embedding**: Convert question to vector using Upstash built-in embeddings
-3. **Search**: Query vector database with top-k=3
-4. **Context**: Extract relevant content from search results
-5. **Generation**: Use Groq API with LLaMA model for response generation
-6. **Output**: Professional, first-person response as digital twin
+2. **Session Management**: Create/retrieve conversation session for context
+3. **Context Building**: Include previous conversation turns if available
+4. **Embedding**: Convert question to vector using Upstash built-in embeddings
+5. **Search**: Query vector database with top-k=3 to 5
+6. **Context**: Extract relevant content from search results
+7. **Cache Check**: Check Step 9 performance cache for faster responses
+8. **Generation**: Use Groq API with LLaMA model for response generation
+9. **Memory Update**: Store user question and assistant response in session
+10. **Output**: Professional, first-person response as digital twin with conversation context
 
 ## Development phases
 1. **Phase 1**: Setup Next.js with TypeScript and ShadCN
