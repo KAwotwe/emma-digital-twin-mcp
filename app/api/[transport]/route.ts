@@ -26,41 +26,65 @@ const handler = createMcpHandler(
   (server) => {
     console.log('MCP Server: Registering tools...')
     
-    // Register the digital twin query tool with minimal configuration
+    // Register the digital twin query tool with automatic conversation memory
+    // This tool now maintains conversation context automatically like the V0 app
+    let defaultSessionId: string | null = null
+    
     server.tool(
       'query_digital_twin',
-      'Ask questions about Emmanuel Awotwe\'s professional background, experience, skills, and career journey.',
+      'Ask questions about Emmanuel Awotwe\'s professional background, experience, skills, and career journey. Automatically maintains conversation context across multiple questions.',
       {
-        question: z.string()
+        question: z.string(),
+        useMemory: z.boolean().optional().describe('Enable conversation memory (default: true)')
       },
-      async ({ question }) => {
+      async ({ question, useMemory = true }) => {
         try {
           console.log('MCP Tool Called: query_digital_twin')
-          console.log('Parameters:', { question })
+          console.log('Parameters:', { question, useMemory })
           
-          // Provide defaults for parameters
-          const queryParams = {
-            question,
-            topK: 3,
-            includeMetadata: true,
-            filterByType: undefined
+          // If memory is disabled, use the basic RAG query
+          if (!useMemory) {
+            const queryParams = {
+              question,
+              topK: 3,
+              includeMetadata: true,
+              filterByType: undefined
+            }
+            
+            const result = await ragQuery(queryParams)
+            
+            const responseText = `**Question:** ${result.question}\n\n**Answer:** ${result.answer}${
+              queryParams.includeMetadata && result.sources.length > 0
+                ? `\n\n**Sources:**\n${result.sources
+                    .map(s => `- ${s.title} (${s.category}) - Relevance: ${s.relevance}`)
+                    .join('\n')}`
+                : ''
+            }`
+            
+            return {
+              content: [{ type: 'text', text: responseText }]
+            }
           }
           
-          // Execute RAG query
-          const result = await ragQuery(queryParams)
+          // Create a default session if none exists
+          if (!defaultSessionId) {
+            const sessionResult = await createConversationSession()
+            if (sessionResult.success) {
+              defaultSessionId = sessionResult.sessionId
+              console.log('✅ Created default conversation session:', defaultSessionId)
+            }
+          }
           
-          console.log('MCP Tool: RAG query successful')
+          // Use memory-aware query (same as V0 app)
+          const result = await memoryAwareDigitalTwinQuery(question, defaultSessionId!, {
+            interviewType: 'auto'
+          })
           
-          // Format response for MCP
-          const responseText = `**Question:** ${result.question}\n\n**Answer:** ${result.answer}${
-            queryParams.includeMetadata && result.sources.length > 0
-              ? `\n\n**Sources:**\n${result.sources
-                  .map(s => `- ${s.title} (${s.category}) - Relevance: ${s.relevance}`)
-                  .join('\n')}`
-              : ''
-          }`
+          console.log('MCP Tool: Memory-aware query successful')
           
-          console.log('MCP Tool: Returning formatted response')
+          // Format response with conversation context
+          const responseText = `**Answer:** ${result.response}\n\n---\n💬 **Conversation Mode Active**\n📊 Total Turns: ${result.conversationHistory.length}\n🔍 Interview Type: ${result.interviewType || 'auto'}\n\n💡 *Follow-up questions will maintain context automatically*`
+          
           return {
             content: [
               {
@@ -1581,7 +1605,48 @@ const handler = createMcpHandler(
       }
     )
     
-    console.log('MCP Server: Tool registration complete (20 tools registered)')
+    // Tool 21: Reset Default Conversation
+    server.tool(
+      'reset_conversation_memory',
+      'Reset the default conversation memory used by query_digital_twin. Use this to start a fresh conversation when the context gets too long or confused.',
+      {},
+      async () => {
+        try {
+          console.log('MCP Tool Called: reset_conversation_memory')
+          
+          if (defaultSessionId) {
+            await clearConversationHistoryAction(defaultSessionId)
+            const oldSessionId = defaultSessionId
+            defaultSessionId = null
+            
+            return {
+              content: [{
+                type: 'text',
+                text: `# 🔄 Conversation Memory Reset\n\n✅ Previous session cleared: \`${oldSessionId}\`\n\n💡 Next question will start a fresh conversation with a new session.`
+              }]
+            }
+          } else {
+            return {
+              content: [{
+                type: 'text',
+                text: `# ℹ️ No Active Session\n\nNo conversation session was active. Your next question will start a new session automatically.`
+              }]
+            }
+          }
+          
+        } catch (error) {
+          console.error('MCP Tool Error (Reset Memory):', error)
+          return {
+            content: [{
+              type: 'text',
+              text: `Error: ${error instanceof Error ? error.message : 'Failed to reset memory'}`
+            }]
+          }
+        }
+      }
+    )
+    
+    console.log('MCP Server: Tool registration complete (21 tools registered)')
   },
   {
     serverInfo: {
