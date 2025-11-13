@@ -69,9 +69,11 @@ const handler = createMcpHandler(
           // Create a default session if none exists
           if (!defaultSessionId) {
             const sessionResult = await createConversationSession()
-            if (sessionResult.success) {
+            if (sessionResult.success && sessionResult.sessionId) {
               defaultSessionId = sessionResult.sessionId
               console.log('✅ Created default conversation session:', defaultSessionId)
+            } else {
+              throw new Error('Failed to create conversation session')
             }
           }
           
