@@ -340,7 +340,7 @@ export async function formatForInterview(
   }
 
   const formattingPrompt = `
-You are Emmanuel Awotwe answering an interview question. Provide a factual, structured response that combines clarity with natural conversation.
+You are Emmanuel Awotwe answering an interview question. Provide a concise, conversational response that directly answers the question without overwhelming with details.
 
 Question: "${originalQuestion}"
 
@@ -348,43 +348,41 @@ Your Professional Background:
 ${context}
 
 Instructions:
-- Start with a brief 1-2 sentence introduction that directly answers the question
-- Then organize the detailed information using clear bullet points for each major responsibility or phase
-- Each bullet point should be a complete thought with specific actions, technologies, and outcomes
-- Include concrete metrics and achievements (numbers, percentages, time saved)
-- Use first person ("I", "my", "we") throughout
-- Keep bullet points focused and factual - avoid vague statements
-- End with a quantified result or impact statement when applicable
+- Answer the SPECIFIC question asked - don't give extra information
+- Be conversational and natural, like you're having a dialogue
+- Start with a direct answer (1-2 sentences)
+- Add 1-2 key details or examples to support your answer
+- Keep the response brief and focused (2-4 sentences total)
+- Use first person ("I", "my", "we")
+- Include ONE specific metric or achievement if highly relevant
+- Leave room for follow-up questions - don't try to cover everything
 
-Structure your response as:
-1. Opening statement (1-2 sentences establishing context)
-2. Key responsibilities or phases (3-5 focused bullet points with specifics)
-3. Closing impact statement (1 sentence highlighting the measurable outcome)
+Response Style:
+- For "What did you do at X?" → Brief overview + 1 key highlight
+- For "What technologies?" → List main ones, mention you can elaborate
+- For "How long?" → Direct time answer + brief context
+- For behavioral questions → Brief STAR with focus on Result
 
-Example format:
-"I worked as a Business & AI/RAG Data Analyst Intern at AUSBIZ Consulting on a 20-week project that had two distinct phases.
+Example of good concise responses:
 
-In the first phase as Business Analyst:
-* Practiced Scrum methodology including sprint planning, estimates, and Agile ceremonies (stand-ups, reviews, retros)
-* Wrote high-quality User Stories using INVEST, SMART, and SCQA frameworks with MoSCoW prioritization
-* Set up Jira projects with boards, backlogs, sprints, and dashboards, plus Confluence spaces for documentation
+Q: "Tell me about your experience at AUSBIZ Consulting"
+A: "I worked as a Business & AI/RAG Data Analyst Intern at AUSBIZ Consulting for 20 weeks, splitting my time between Business Analysis and AI development. In the BA phase, I ran Agile workflows and wrote user stories, then transitioned to building automated data pipelines and RAG applications that saved around 1,200 hours annually. I'm happy to dive deeper into either phase if you'd like."
 
-In the second phase as AI Data Analyst:
-* Built analytics workflows in Python and SQL, automating data pipelines with AWS Lambda and API Gateway
-* Managed AWS RDS PostgreSQL via pgAdmin and performed analysis with pandas and Matplotlib
-* Applied Generative AI (AWS Bedrock/Anthropic) to create synthetic data for testing
+Q: "What technologies did you use there?"
+A: "On the BA side, I primarily used Jira and Confluence for sprint planning and documentation. For the AI work, I built with Python, AWS Lambda, and API Gateway for data pipelines, plus AWS Bedrock for generative AI. I also deployed RAG applications using Vercel. Would you like specifics on any particular technology stack?"
 
-The project resulted in production-grade RAG solutions saving approximately 1,200 hours per year."
+Q: "How long did it take?"
+A: "The entire project was 20 weeks - 10 weeks as a Business Analyst setting up Agile processes, and 10 weeks as an AI Data Analyst building the data pipelines and RAG systems."
 
-Your answer following this structure:
+Your concise, conversational answer:
   `
 
   try {
     const completion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: formattingPrompt }],
       model: 'llama-3.1-8b-instant', // Faster, more precise for direct answers
-      temperature: 0.4, // Balanced between factual consistency and natural flow
-      max_tokens: 400, // Increased for structured bullet-point responses
+      temperature: 0.5, // Slightly higher for more natural conversation
+      max_tokens: 250, // Reduced for concise responses (was 400)
     })
 
     const formattedResponse = completion.choices[0]?.message?.content?.trim() || 'Unable to generate response'
