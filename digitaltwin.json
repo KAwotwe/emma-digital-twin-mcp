@@ -187,20 +187,115 @@
   "experience": [
     {
       "company": "AUSBIZ Consulting",
-      "title": "Business & AI Data Analyst Intern",
-      "duration": "May 2025 – September 2025",
+      "title": "Business & AI/RAG Data Analyst Intern",
+      "duration": "May 2025 – Sep 2025",
       "company_context": "AI/ML consulting firm specializing in business analytics and industry projects",
       "team_structure": "Cross-functional team including developers, technical staff, and analysts",
-      "achievements_star": [
+      "project": "Employability Advantage Live Industry Project (20 weeks total: 10 weeks as Business Analyst + 10 weeks as AI Data Analyst)",
+      "roles": [
         {
-          "situation": "Industry project required a production-ready Food RAG and website problem analysis.",
-          "task": "Analyze, prototype, and ship a reliable system with clear admin surface.",
-          "action": "V0 prototyping, ClickUp user stories, Ollama embeddings, Upstash Vector, Groq API integration, Vercel deploy.",
-          "result": "Live system saving ~1,200 hours/year and improving content retrieval."
+          "role": "Business Analyst",
+          "duration": "10 weeks (first phase of project)",
+          "responsibilities": [
+            "Practiced Scrum methodology across Scrum/Kanban workflows; ran sprint planning, estimates, and Agile ceremonies (stand-ups, reviews, retros)",
+            "Wrote high-quality User Stories (EPICs/Stories/Tasks/Defects) using INVEST, SMART, and SCQA frameworks; refined acceptance criteria with MoSCoW prioritisation",
+            "Set up Jira projects (boards, backlogs, sprints, dashboards) and Confluence spaces for requirements and traceability; documented expected UI behaviour with clear UI vocabulary",
+            "Leveraged GitHub Copilot/ChatGPT to draft, critique and tighten stories & acceptance criteria; facilitated requirements management (user-centric vs system-centric)"
+          ]
+        },
+        {
+          "role": "AI Data Analyst",
+          "duration": "10 weeks (second phase of project)",
+          "responsibilities": [
+            "Built analytics workflows in Python + SQL; automated data pipelines and APIs with AWS Lambda + API Gateway; managed AWS RDS PostgreSQL (via pgAdmin)",
+            "Performed data analysis/visualisation with pandas and Matplotlib; engineered REST API integrations for ingestion & enrichment",
+            "Applied Generative AI (AWS Bedrock / Anthropic) to create synthetic data for testing and scenario design; used GitHub Copilot to accelerate implementation and reviews"
+          ]
         }
       ],
-      "technical_skills_used": ["Python", "RAG", "Upstash Vector", "Groq API", "V0.dev", "Ollama", "ClickUp", "CMS"],
-      "leadership_examples": ["Led end-to-end RAG solution delivery", "Coordinated with developers and technical staff"]
+      "achievements_star": [
+        {
+          "situation": "20-week Employability Advantage Live Industry Project at AUSBIZ Consulting required delivering production-grade Business Analysis artifacts (first 10 weeks) followed by AI-powered data solutions including RAG systems and a Digital Twin (second 10 weeks).",
+          "task": "Execute full Agile/Scrum BA workflows in the first phase, then transition to building automated data pipelines with AWS services, applying Generative AI for testing, and shipping production-ready RAG applications with semantic search capabilities in the second phase.",
+          "action": "First 10 weeks as Business Analyst: Practiced Scrum methodology running sprint planning and Agile ceremonies; wrote User Stories using INVEST/SMART/SCQA frameworks with MoSCoW prioritisation; set up Jira projects and Confluence spaces; leveraged GitHub Copilot/ChatGPT for story refinement. Second 10 weeks as AI Data Analyst: Built Python+SQL analytics workflows; automated pipelines with AWS Lambda, API Gateway, and RDS PostgreSQL; performed data analysis with pandas/Matplotlib; engineered REST API integrations; applied AWS Bedrock/Anthropic for synthetic data; created embeddings with Ollama; built Food RAG app using v0.dev; deployed MCP server on Vercel; delivered Digital Twin RAG app with real-time Q&A.",
+          "result": "Shipped production-grade RAG solutions saving ~1,200 hours/year; delivered Food RAG App (https://v0-rag-with-groq.vercel.app/) and Digital Twin RAG App (https://v0-digital-twin-rag-app.vercel.app/) with semantic, contextual answers; successfully deployed MCP server on Vercel powering real-time Q&A; demonstrated proficiency in Agile BA practices, requirements management, AWS data engineering, and Generative AI applications across both sequential phases."
+        }
+      ],
+      "technical_skills_used": [
+        "Scrum/Kanban",
+        "User Stories/EPICs",
+        "INVEST/SMART/SCQA frameworks",
+        "MoSCoW prioritisation",
+        "Jira (boards, backlogs, sprints, dashboards)",
+        "Confluence",
+        "Python",
+        "SQL",
+        "AWS Lambda",
+        "AWS API Gateway",
+        "AWS RDS PostgreSQL",
+        "pgAdmin",
+        "REST APIs",
+        "pandas",
+        "Matplotlib",
+        "GitHub Copilot",
+        "ChatGPT",
+        "AWS Bedrock",
+        "Anthropic",
+        "Requirements Management",
+        "UI Behaviour Specs",
+        "Sprint Planning & Rituals",
+        "RAG (Retrieval-Augmented Generation)",
+        "Upstash Vector",
+        "Groq API",
+        "V0.dev",
+        "Ollama (embeddings)",
+        "MCP Server",
+        "Vercel Deployment",
+        "Semantic Search",
+        "Generative AI"
+      ],
+      "methodologies": [
+        "Scrum methodology",
+        "Kanban workflows",
+        "Sprint planning and estimates",
+        "Agile ceremonies (stand-ups, reviews, retrospectives)",
+        "INVEST framework for User Stories",
+        "SMART criteria",
+        "SCQA framework",
+        "MoSCoW prioritisation",
+        "Requirements management (user-centric vs system-centric)",
+        "UI behaviour specification"
+      ],
+      "deliverables": [
+        {
+          "name": "Food RAG Application",
+          "url": "https://v0-rag-with-groq.vercel.app/",
+          "description": "Production-grade RAG system with real-time food information retrieval, saving ~1,200 hours/year"
+        },
+        {
+          "name": "Digital Twin RAG Application",
+          "url": "https://v0-digital-twin-rag-app.vercel.app/",
+          "description": "Professional profile assistant with real-time Q&A using text and voice capabilities"
+        },
+        {
+          "name": "MCP Server",
+          "platform": "Vercel",
+          "description": "Deployed MCP server powering semantic, contextual answers and professional information retrieval"
+        }
+      ],
+      "leadership_examples": [
+        "Ran sprint planning, estimates, and Agile ceremonies (stand-ups, reviews, retros)",
+        "Led end-to-end RAG solution delivery from requirements to production deployment",
+        "Facilitated requirements management sessions distinguishing user-centric vs system-centric approaches",
+        "Coordinated with developers and technical staff across AWS infrastructure and deployment pipelines"
+      ],
+      "agile_artifacts": [
+        "Jira projects with boards, backlogs, sprints, and dashboards",
+        "Confluence spaces for requirements documentation and traceability",
+        "User Stories structured as EPICs/Stories/Tasks/Defects",
+        "Acceptance criteria with MoSCoW prioritisation",
+        "UI behaviour specifications with clear vocabulary"
+      ]
     },
     {
       "company": "Newmont Ghana Gold Ltd (NGGL)",
@@ -415,5 +510,5 @@
     "Ready to re-run embedding script after saving this JSON"
   ],
 
-  "last_updated": "2025-10-06"
+  "last_updated": "2025-11-13"
 }

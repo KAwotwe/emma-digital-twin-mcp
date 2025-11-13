@@ -340,7 +340,7 @@ export async function formatForInterview(
   }
 
   const formattingPrompt = `
-You are Emmanuel Awotwe answering an interview question. Answer directly and concisely in first person.
+You are Emmanuel Awotwe answering an interview question. Provide a factual, structured response that combines clarity with natural conversation.
 
 Question: "${originalQuestion}"
 
@@ -348,22 +348,43 @@ Your Professional Background:
 ${context}
 
 Instructions:
-- Answer the SPECIFIC question asked - don't give extra information
-- Be direct and concise (2-3 sentences maximum for simple questions)
-- Use first person ("I", "my")
-- Only use STAR format for behavioral/experience questions
-- For simple factual questions (where, when, what), give a direct answer
-- Include specific details from your background
+- Start with a brief 1-2 sentence introduction that directly answers the question
+- Then organize the detailed information using clear bullet points for each major responsibility or phase
+- Each bullet point should be a complete thought with specific actions, technologies, and outcomes
+- Include concrete metrics and achievements (numbers, percentages, time saved)
+- Use first person ("I", "my", "we") throughout
+- Keep bullet points focused and factual - avoid vague statements
+- End with a quantified result or impact statement when applicable
 
-Your answer:
+Structure your response as:
+1. Opening statement (1-2 sentences establishing context)
+2. Key responsibilities or phases (3-5 focused bullet points with specifics)
+3. Closing impact statement (1 sentence highlighting the measurable outcome)
+
+Example format:
+"I worked as a Business & AI/RAG Data Analyst Intern at AUSBIZ Consulting on a 20-week project that had two distinct phases.
+
+In the first phase as Business Analyst:
+* Practiced Scrum methodology including sprint planning, estimates, and Agile ceremonies (stand-ups, reviews, retros)
+* Wrote high-quality User Stories using INVEST, SMART, and SCQA frameworks with MoSCoW prioritization
+* Set up Jira projects with boards, backlogs, sprints, and dashboards, plus Confluence spaces for documentation
+
+In the second phase as AI Data Analyst:
+* Built analytics workflows in Python and SQL, automating data pipelines with AWS Lambda and API Gateway
+* Managed AWS RDS PostgreSQL via pgAdmin and performed analysis with pandas and Matplotlib
+* Applied Generative AI (AWS Bedrock/Anthropic) to create synthetic data for testing
+
+The project resulted in production-grade RAG solutions saving approximately 1,200 hours per year."
+
+Your answer following this structure:
   `
 
   try {
     const completion = await groq.chat.completions.create({
       messages: [{ role: 'user', content: formattingPrompt }],
       model: 'llama-3.1-8b-instant', // Faster, more precise for direct answers
-      temperature: 0.3, // Lower temperature for more factual, consistent responses
-      max_tokens: 300, // Shorter responses for conciseness
+      temperature: 0.4, // Balanced between factual consistency and natural flow
+      max_tokens: 400, // Increased for structured bullet-point responses
     })
 
     const formattedResponse = completion.choices[0]?.message?.content?.trim() || 'Unable to generate response'
@@ -437,15 +458,15 @@ export async function formatForInterviewWithOptions(
   }
 
   const starInstructions = emphasizeSTAR
-    ? 'IMPORTANT: Structure the response using STAR format (Situation-Task-Action-Result) with clear metrics and outcomes.'
+    ? 'IMPORTANT: Use STAR thinking (Situation-Task-Action-Result) but present it naturally as a flowing narrative. DO NOT label sections with "Situation:", "Task:", "Action:", "Result:". Instead, weave the story naturally: set the context, explain your role and objectives, describe what you did, and emphasize the measurable impact.'
     : 'Include specific examples and outcomes where relevant.'
 
   const metricsInstructions = includeMetrics
-    ? 'Emphasize quantifiable achievements: percentages, time saved, efficiency gains, user numbers, revenue impact, etc.'
+    ? 'Weave quantifiable achievements naturally into your narrative: percentages, time saved, efficiency gains, user numbers, revenue impact, etc. Don\'t just list them - incorporate them into the story.'
     : 'Include achievements and impact.'
 
   const formattingPrompt = `
-You are an expert interview coach. Create a compelling interview response using this professional data.
+You are Emmanuel Awotwe preparing a natural, conversational interview response.
 
 Question: "${originalQuestion}"
 
@@ -453,15 +474,22 @@ Professional Background Data:
 ${context}
 
 Create a response that:
-- Directly addresses the interview question
+- Tells a compelling story naturally - NO labeled sections like "Situation:", "Task:", etc.
 - ${starInstructions}
 - ${metricsInstructions}
 - ${toneInstructions}
-- Sounds natural for an interview setting
+- Sounds natural and conversational, as you would speak in an actual interview
+- Flows smoothly from context → your actions → impact/results
 - Highlights unique value and differentiators
-- Includes relevant technical details without being overwhelming
+- Includes relevant technical details woven into the narrative
 
-Interview Response:
+Example of natural STAR flow (DO THIS):
+"During my 10-week project at AUSBIZ, I handled both Business Analyst and AI Data Analyst responsibilities. I set up our entire Agile infrastructure - Jira boards, sprint planning, and wrote user stories using INVEST and SMART frameworks. On the technical side, I built automated data pipelines with AWS Lambda and API Gateway, and deployed production RAG applications that ended up saving about 1,200 hours annually."
+
+DO NOT do this (avoid labeled sections):
+"Situation: At AUSBIZ... Task: I needed to... Action: I did... Result: This achieved..."
+
+Your natural interview response:
   `
 
   try {

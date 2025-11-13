@@ -528,20 +528,54 @@ export async function populateVectorDatabase(): Promise<void> {
     
     // Add experience
     if (profile.experience) {
-      profile.experience.forEach((exp, index: number) => {
-        const achievements = exp.achievements_star?.map((a) => 
+      profile.experience.forEach((exp: Record<string, unknown>, index: number) => {
+        const achievements = (exp.achievements_star as Array<Record<string, string>>)?.map((a) => 
           `Achievement: Situation: ${a.situation}. Task: ${a.task}. Action: ${a.action}. Result: ${a.result}.`
         ).join(' ') || ''
         
+        // Include additional fields if they exist (for enhanced entries like AUSBIZ)
+        const responsibilities = (exp.key_responsibilities as string[])?.join('. ') || ''
+        const project = exp.project ? `Project: ${exp.project}. ` : ''
+        const deliverables = (exp.deliverables as Array<Record<string, string>>)?.map((d) => 
+          `${d.name}: ${d.description}` + (d.url ? ` (${d.url})` : '')
+        ).join('. ') || ''
+        const technicalSkills = (exp.technical_skills_used as string[])?.join(', ') || ''
+        const leadership = (exp.leadership_examples as string[])?.join('. ') || ''
+        const methodologies = (exp.methodologies as string[])?.join('. ') || ''
+        const agileArtifacts = (exp.agile_artifacts as string[])?.join('. ') || ''
+        
+        // Handle roles structure (for AUSBIZ enhanced format)
+        const rolesContent = (exp.roles as Array<Record<string, unknown>>)?.map((role) => {
+          const roleResponsibilities = (role.responsibilities as string[])?.join('; ') || ''
+          return `${role.role}: ${roleResponsibilities}`
+        }).join('. ') || ''
+        
+        // Create comprehensive searchable text
+        const searchableContent = [
+          `Work Experience: ${exp.title} at ${exp.company} (${exp.duration})`,
+          exp.company_context ? `Company: ${exp.company_context}` : '',
+          project,
+          rolesContent ? `Roles and Responsibilities: ${rolesContent}` : '',
+          responsibilities ? `Responsibilities: ${responsibilities}` : '',
+          achievements,
+          technicalSkills ? `Technologies: ${technicalSkills}` : '',
+          methodologies ? `Methodologies: ${methodologies}` : '',
+          agileArtifacts ? `Agile Artifacts: ${agileArtifacts}` : '',
+          deliverables ? `Deliverables: ${deliverables}` : '',
+          leadership ? `Leadership: ${leadership}` : ''
+        ].filter(text => text).join('. ')
+        
         vectors.push({
           id: `experience_${index}`,
-          data: `Work Experience: ${exp.title} at ${exp.company} (${exp.duration}). ${exp.company_context || ''}. ${achievements}`,
+          data: searchableContent,
           metadata: {
             title: `${exp.title} at ${exp.company}`,
             type: 'experience',
             category: 'work_experience',
-            tags: ['work', 'experience', 'employment'],
-            importance: 'high'
+            tags: ['work', 'experience', 'employment', (exp.company as string).toLowerCase().replace(/\s+/g, '_')],
+            importance: 'high',
+            company: exp.company as string,
+            content: searchableContent // Also store in metadata for fallback
           }
         })
       })
